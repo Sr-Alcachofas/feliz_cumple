@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¡Para Mi Leydi! 🧸</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            overflow-x: hidden;
+            padding: 20px;
+            position: relative;
+            background: linear-gradient(-45deg, #ffe5ec, #ffb3c1, #e6c1e1, #fff0f3);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .lotso-avatar {
+            width: 90px;
+            height: 80px;
+            background: #d81159;
+            border-radius: 50% 50% 45% 45%;
+            margin: 0 auto 15px;
+            position: relative;
+            box-shadow: 0 8px 20px rgba(216, 17, 89, 0.3);
+        }
+        .lotso-avatar::before, .lotso-avatar::after {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: radial-gradient(circle, #ff7096 40%, #d81159 45%);
+            border-radius: 50%;
+            top: -5px;
+        }
+        .lotso-avatar::before { left: -5px; }
+        .lotso-avatar::after { right: -5px; }
+        
+        .lotso-hocico {
+            position: absolute;
+            width: 50px;
+            height: 35px;
+            background: #fff0f3;
+            border-radius: 50%;
+            bottom: 12px;
+            left: 20px;
+        }
+        .lotso-nariz {
+            position: absolute;
+            width: 18px;
+            height: 12px;
+            background: #6b0023;
+            border-radius: 50%;
+            top: 5px;
+            left: 16px;
+        }
+        .lotso-ojos {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #210014;
+            border-radius: 50%;
+            top: 25px;
+            left: 22px;
+            box-shadow: 36px 0 #210014;
+        }
+        .lotso-cejas {
+            position: absolute;
+            width: 14px;
+            height: 4px;
+            background: #6b0023;
+            border-radius: 2px;
+            top: 16px;
+            left: 19px;
+            transform: rotate(5deg);
+            box-shadow: 34px -3px #6b0023;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.96);
+            padding: 35px 25px;
+            border-radius: 30px;
+            box-shadow: 0 20px 40px rgba(214, 40, 40, 0.15);
+            max-width: 440px;
+            width: 100%;
+            z-index: 10;
+            border: 4px solid #ff477e;
+            transition: all 0.5s ease;
+        }
+
+        h1 {
+            color: #d90429;
+            font-size: 2.1rem;
+            margin-bottom: 8px;
+            line-height: 1.2;
+            animation: titlePulse 2s infinite ease-in-out;
+        }
+
+        @keyframes titlePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        .subtitulo {
+            font-size: 1.1rem;
+            color: #ff0a54;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 1.05rem;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            color: #4a4a4a;
+        }
+
+        .btn-container {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            height: 70px;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 14px 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 25px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.1s ease, background-color 0.2s ease;
+        }
+
+        #btn-si {
+            background-color: #ff477e;
+            color: white;
+            z-index: 15;
+        }
+
+        #btn-si:hover { background-color: #ff0a54; }
+        #btn-si:active { transform: scale(0.95); }
+
+        #btn-no {
+            background-color: #9b5de5;
+            color: white;
+            position: absolute;
+            z-index: 20;
+            transition: all 0.15s ease-out;
+        }
+
+        .tulipanes-seccion {
+            display: flex;
+            justify-content: space-around;
+            margin: 25px 0 15px;
+        }
+
+        .tulipan-btn {
+            background: none;
+            border: none;
+            font-size: 3rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+            animation: tulipBounce 3s infinite ease-in-out;
+        }
+        .tulipan-btn:hover { transform: scale(1.25) !important; }
+        .tulipan-btn:nth-child(2) { animation-delay: 0.5s; }
+        .tulipan-btn:nth-child(3) { animation-delay: 1s; }
+
+        @keyframes tulipBounce {
+            0%, 100% { transform: translateY(0) rotate(0); }
+            50% { transform: translateY(-8px) rotate(5deg); }
+        }
+
+        #frase-tulipan {
+            min-height: 60px;
+            font-size: 1.05rem;
+            color: #d90429;
+            font-weight: bold;
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 15px;
+            background-color: #ffe5ec;
+            display: none;
+            border: 2px solid #ff7096;
+        }
+
+        .contador-seccion {
+            background: #fff;
+            border: 2px dashed #ff477e;
+            padding: 15px;
+            border-radius: 15px;
+            margin-top: 25px;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.05);
+        }
+
+        .contador-titulo {
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #ff0a54;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        #reloj {
+            font-size: 1.15rem;
+            font-weight: bold;
+            color: #4a4a4a;
+        }
+
+        .fecha-intro {
+            font-size: 0.85rem;
+            margin-top: 5px;
+            font-weight: bold;
+            color: #ff7096;
+            font-style: italic;
+        }
+
+        #btn-deseo, #btn-ver-video {
+            color: white;
+            margin-top: 15px;
+            width: 100%;
+        }
+
+        #btn-deseo { background-color: #7209b7; }
+        #btn-deseo:hover { background-color: #560bad; }
+
+        #btn-ver-video { background-color: #00b4d8; }
+        #btn-ver-video:hover { background-color: #0077b6; }
+
+        .video-container {
+            max-width: 500px;
+            width: 100%;
+            background: #000;
+            border-radius: 25px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            border: 4px solid #00b4d8;
+            z-index: 10;
+        }
+
+        video {
+            width: 100%;
+            display: block;
+        }
+
+        .btn-regresar {
+            background-color: #ff477e;
+            color: white;
+            margin-top: 15px;
+            width: 100%;
+        }
+        .btn-regresar:hover { background-color: #ff0a54; }
+
+        .elemento-flotante {
+            position: absolute;
+            bottom: -50px;
+            animation: flotar 4.5s linear infinite;
+            opacity: 0;
+            z-index: 1;
+            user-select: none;
+            pointer-events: none;
+        }
+
+        @keyframes flotar {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-105vh) rotate(360deg); opacity: 0; }
+        }
+
+        .oculto { display: none !important; }
+        .visible { display: block !important; }
+
+        .carta-final {
+            animation: abrirCarta 0.8s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes abrirCarta {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .parrafo-carta {
+            background: #fff0f3;
+            padding: 20px;
+            border-radius: 20px;
+            border-left: 5px solid #ff477e;
+            text-align: left;
+            font-style: italic;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.03);
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="musica-mp3" src="musica.mp3" loop></audio>   
+    <div id="pantalla-juego" class="container">
+        <div class="lotso-avatar">
+            <div class="lotso-cejas"></div>
+            <div class="lotso-ojos"></div>
+            <div class="lotso-hocico">
+                <div class="lotso-nariz"></div>
+            </div>
+        </div>
+        
+        <h1>¡Feliz cumpleaños MI LEYDI! 🎂</h1>
+        <div class="subtitulo">¡Ya son 19 primaveras! 🌷</div>
+        <p>¿Me dejas ser la primera persona en darte un abrazo de cumpleaños hoy y tal vez ganarme por completo el puesto de tu persona favorita? 🧸✨</p>
+        
+        <div class="btn-container">
+            <button id="btn-si" class="btn">¡SÍ, OBVIO! 💕</button>
+            <button id="btn-no" class="btn">Nop 😜</button>
+        </div>
+    </div>
+
+    <div id="pantalla-sorpresa" class="container oculto carta-final">
+        <div class="lotso-avatar" style="transform: scale(0.8); margin-bottom: 5px;">
+            <div class="lotso-cejas"></div>
+            <div class="lotso-ojos"></div>
+            <div class="lotso-hocico"><div class="lotso-nariz"></div></div>
+        </div>
+        <h1>¡Sabía que dirías que sí!</h1>
+        <div class="subtitulo">Felices 19 primaveras 🌸</div>
+        
+        <p class="parrafo-carta">Hoy cumples 19 primaveras y no quería dejar pasar el día sin recordarte lo increíble y extremadamente especial que eres para mí. Gracias por cada sonrisa compartida y por alegrar mis días. Te mereces un año lleno de cosas hermosas, metas cumplidas y muchísima felicidad. ¡Feliz cumpleaños, mi Leydi! 🌷🎂</p>
+        
+        <div class="subtitulo" style="margin-bottom: 5px; margin-top: 15px;">Presiona los tulipanes para un deseo 🌷</div>
+        <div class="tulipanes-seccion">
+            <button class="tulipan-btn" onclick="mostrarFrase(1)">🌷</button>
+            <button class="tulipan-btn" onclick="mostrarFrase(2)">🌷</button>
+            <button class="tulipan-btn" onclick="mostrarFrase(3)">🌷</button>
+        </div>
+        <div id="frase-tulipan"></div>
+
+        <div class="contador-seccion">
+            <div class="contador-titulo">Llevamos sumando momentos:</div>
+            <div id="reloj"></div>
+            <div class="fecha-intro">Desde ese increíble 2 de mayo de 2026 en que te conocí... ⏳🧸</div>
+        </div>
+
+        <button id="btn-deseo" class="btn" onclick="pideDeseo()">Pide un deseo aquí 🎂</button>
+        <button id="btn-ver-video" class="btn" onclick="abrirVideo()">Ver un video especial para tii ❤️</button>
+    </div>
+
+    <div id="pantalla-video" class="video-container oculto carta-final">
+        <video id="reproductor-video" src="video.mp4" loop></video>
+        <div style="padding: 10px 20px 20px 20px;">
+            <button class="btn btn-regresar" onclick="cerrarVideo()">Volver a la carta ❤️</button>
+        </div>
+    </div>
+
+    <script>
+        const btnNo = document.getElementById('btn-no');
+        const btnSi = document.getElementById('btn-si');
+        const juego = document.getElementById('pantalla-juego');
+        const sorpresa = document.getElementById('pantalla-sorpresa');
+        const pantallaVideo = document.getElementById('pantalla-video');
+        const videoElement = document.getElementById('reproductor-video');
+        const fraseBox = document.getElementById('frase-tulipan');
+        const cancion = document.getElementById('musica-mp3');
+        const iconosFlotantes = ['🌷', '❤️', '✨', '🌸', '🧸','🌷'];
+
+        const frasesTulipanes = {
+            1: "Que estas 19 primaveras sean solo el inicio de todas las que quiero celebrar a tu lado... 🌷💕",
+            2: "Que en tus próximos planes e historias siempre haya un espacio guardado para mí... 🧸✨",
+            3: "Que sigamos construyendo momentos tan lindos como los que han ido sumando en nuestro contador... 😊💖"
+        };
+
+        function moverBotonNo(e) {
+            if(e) e.preventDefault();
+            const padding = 70;
+            const xMax = window.innerWidth - btnNo.clientWidth - padding;
+            const yMax = window.innerHeight - btnNo.clientHeight - padding;
+            
+            const randomX = Math.floor(Math.random() * Math.max(xMax, padding));
+            const randomY = Math.floor(Math.random() * Math.max(yMax, padding));
+            
+            btnNo.style.position = 'fixed';
+            btnNo.style.left = randomX + 'px';
+            btnNo.style.top = randomY + 'px';
+        }
+
+        btnNo.addEventListener('mouseenter', moverBotonNo);
+        btnNo.addEventListener('touchstart', moverBotonNo);
+
+        btnSi.addEventListener('click', () => {
+            juego.classList.add('oculto');
+            sorpresa.classList.remove('oculto');
+            sorpresa.classList.add('visible');
+            
+            cancion.play().catch(err => {
+                console.log(err);
+            });
+
+            actualizarContador();
+            setInterval(actualizarContador, 1000);
+
+            for(let i = 0; i < 40; i++) {
+                setTimeout(crearElementoFlotante, i * 60);
+            }
+        });
+
+        function mostrarFrase(num) {
+            fraseBox.style.display = "block";
+            fraseBox.innerHTML = frasesTulipanes[num];
+            fraseBox.style.animation = 'none';
+            fraseBox.offsetHeight; 
+            fraseBox.style.animation = 'abrirCarta 0.5s ease-out';
+        }
+
+        function actualizarContador() {
+            const fechaConociste = new Date('May 2, 2026 00:00:00').getTime();
+            const ahora = new Date().getTime();
+            const diferencia = ahora - fechaConociste;
+
+            if (diferencia < 0) {
+                document.getElementById('reloj').innerHTML = "¡El momento se está creando ahora mismo! ✨";
+                return;
+            }
+
+            const segundos = Math.floor((diferencia / 1000) % 60);
+            const minutos = Math.floor((diferencia / (1000 * 60)) % 60);
+            const horas = Math.floor((diferencia / (1000 * 60 * 60)) % 24);
+            const diasTotales = Math.floor(diferencia / (1000 * 60 * 60 * 24));
+
+            const meses = Math.floor(diasTotales / 30.41);
+            const dias = Math.floor(diasTotales % 30.41);
+
+            let textoTiempo = "";
+            if (meses > 0) textoTiempo += `${meses} ${meses === 1 ? 'mes' : 'meses'}, `;
+            textoTiempo += `${dias} ${dias === 1 ? 'día' : 'días'}, ${horas}h, ${minutos}m, ${segundos}s`;
+
+            document.getElementById('reloj').innerHTML = textoTiempo;
+        }
+
+        function pideDeseo() {
+            const btnDeseo = document.getElementById('btn-deseo');
+            btnDeseo.innerHTML = "¡Deseo Guardado en el Corazón! ✨";
+            btnDeseo.style.backgroundColor = "#ff477e";
+            
+            confetti({
+                particleCount: 160,
+                spread: 85,
+                origin: { y: 0.6 },
+                colors: ['#ff477e', '#ff0a54', '#ff7096', '#7209b7']
+            });
+
+            for(let i = 0; i < 25; i++) {
+                setTimeout(crearElementoFlotante, i * 40);
+            }
+        }
+
+        function abrirVideo() {
+            sorpresa.classList.add('oculto');
+            pantallaVideo.classList.remove('oculto');
+            pantallaVideo.classList.add('visible');
+            cancion.pause();
+            videoElement.play().catch(err => console.log(err));
+        }
+
+        function cerrarVideo() {
+            videoElement.pause();
+            pantallaVideo.classList.add('oculto');
+            sorpresa.classList.remove('oculto');
+            sorpresa.classList.add('visible');
+            cancion.play().catch(err => console.log(err));
+        }
+
+        function crearElementoFlotante() {
+            const el = document.createElement('div');
+            el.classList.add('elemento-flotante');
+            el.innerHTML = iconosFlotantes[Math.floor(Math.random() * iconosFlotantes.length)];
+            
+            el.style.left = Math.random() * 95 + 'vw';
+            el.style.animationDuration = (Math.random() * 2 + 3) + 's';
+            el.style.fontSize = (Math.random() * 18 + 22) + 'px';
+            document.body.appendChild(el);
+
+            setTimeout(() => { el.remove(); }, 4500);
+        }
+
+        setInterval(crearElementoFlotante, 550);
+    </script>
+</body>
+</html>
